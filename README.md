@@ -1,20 +1,16 @@
-# React Native Module Template
+# Create and Distribute React Native Libraries
 
-A starter for the React Native library written in TypeScript, with linked example project and optional native code written in Swift and Kotlin. This project aims to support the latest React Native versions and keep best practices in mind.
+In this tutorial, we will show you step by step how to create a library for React native and distribute it through npm.
 
-## Alternatives
+## First Step
 
-[create-react-native-module](https://github.com/brodybits/create-react-native-module)
+Clone this repo
 
-### Why this template?
+```
+git clone https://github.com/demchenkoalex/react-native-module-template.git
+```
 
-First of all, it has TypeScript set up and ready. Also, if you will use a native code, this template uses Swift and Kotlin, which is much better than Objective-C and Java.
-
-The example project is linked in a way so that you can work on your library and see the results of your work immediately. If you use native code you can see linked libraries in the example project opened in Xcode or Android Studio and can modify the code directly from there, just remember to rebuild the example to see the changes. When you change TypeScript code you need to compile it first (using `yarn` command, it has `prepare` hook set up) since with npm you are supplying `lib` folder with JavaScript and type definitions, but there is an [option](#how-to-see-my-changes-immediately-in-the-example) to point example to the `src` folder instead, so that when you modify your library you see changes immediately in the example thanks to [Fast Refresh](https://facebook.github.io/react-native/docs/fast-refresh).
-
-## Usage
-
-Clone this repo, rename the `react-native-module-template` folder to your library name, navigate to that folder and run
+rename the `react-native-module-template` folder to your library name, navigate to that folder and run
 
 ```
 node rename.js
@@ -35,6 +31,10 @@ This will invoke rename script, which removes all references to the template and
 - Use `PascalCase` for the library short name (in case you will have native code, with `js-only` argument script will not ask for this), it is used in native projects (RNModuleTemplate.xcodeproj, RNModuleTemplatePackage.kt etc.). If you prefixed your library name with `react-native` use prefix `RN` for the short name (e.g. `RNBlueButton`, BlueButton, Button).
 - Library homepage is used only in `package.json`, if you are not sure, you can press enter to skip this step and modify this field later. Library git url is used only in `.podspec` file, same as above (note that this file will be removed if you pass `js-only` argument).
 - Please don't use any special characters in author name since it is a part of Android package name, (e.g. `com.alexdemchenko.reactnativemoduletemplate`) and used in Kotlin and other files. Android package name is generated from author name (with removed spaces and lowercased) and library name (with removed dashes).
+
+Remove .git folder from your project root.
+
+Add description to root package.json.
 
 Don't forget to remove the rename script, do `yarn` to install dependencies in root and example folders, and, if you kept native code, do `pod install` in `example/ios`.
 
@@ -81,6 +81,13 @@ In the example's [tsconfig.json](example/tsconfig.json) custom path is specified
 },
 ```
 
+### How to compile lib
+
+Run this script:
+```
+yarn compile
+```
+
 ### How to see my changes immediately in the example
 
 In the library's `package.json` change
@@ -105,13 +112,35 @@ yarn start
 
 ## Release
 
+After apply chnages on your codes, you should deploy it on internet.
+
+### Publish to Github
+First of all push code in github repository. (If you not have a repository for your library you should creat one).
+
+```
+git init
+git commit -m "first commit"
+git branch -M main
+git remote add origin {your_github_repository_url}
+git push -u origin main
+```
+
+
+### Create a release TAG in git
+
+```
+git tag {version} -m "description" 
+git push origin {version}
+```
+
+### Publish on npm
 Create an npm account [here](https://www.npmjs.com/signup) if you don't have one. Then do
 
 ```
 npm login
 ```
 
-and
+publish on npm
 
 ```
 npm publish
@@ -120,6 +149,29 @@ npm publish
 ℹ️ If you want to see what files will be included in your package before release run `npm pack`
 
 ℹ️ If you have native code in your library most of the time you will need `.kt`, `.h`/`.m`, `.swift` files, `project.pbxproj`, `AndroidManifest.xml` and `build.gradle` aside from TypeScript code and default stuff, so keep an eye on what you are publishing, some configuration/build folders or files might sneak in. Most of them (if not all) are ignored in [package.json](package.json).
+
+## Update Library
+If you modify your library and you want to update Library on npm, do the following
+
+### Step 1 - Update library version
+update version in package.json
+
+### Step 2 - Update your  Repository on Github
+```
+git add .
+git commit -m "update"
+git push -u origin master
+```
+
+### Step 3 - Tagging
+```
+git tag {version} -m "description"
+git push origin {version}
+```
+### Step 4 - Update on npm
+```
+npm publish
+```
 
 ## FAQ
 
